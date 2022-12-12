@@ -2,7 +2,7 @@
 	"name": "DelimitedText1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_gen2_datalake",
+			"referenceName": "LS_final_datalake",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
