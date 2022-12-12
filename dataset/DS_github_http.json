@@ -1,0 +1,22 @@
+{
+	"name": "DS_github_http",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_http_github",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "/djpmsft/adf-ready-demo/master/moviesDB.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
