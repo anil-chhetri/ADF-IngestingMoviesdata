@@ -14,9 +14,9 @@
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "DelimitedText1",
-						"type": "DatasetReference"
+					"linkedService": {
+						"referenceName": "LS_final_datalake",
+						"type": "LinkedServiceReference"
 					},
 					"name": "sink1"
 				}
@@ -66,12 +66,26 @@
 				"          NumberOfMovies = count(title)) ~> aggregate1",
 				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     folderPath: 'final',",
 				"     truncate: true,",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          year,",
+				"          genres,",
+				"          AverageTomatoScore,",
+				"          HigestScoreMovie,",
+				"          LowestScoreTitle,",
+				"          NumberOfMovies",
+				"     )) ~> sink1"
 			]
 		}
 	}
