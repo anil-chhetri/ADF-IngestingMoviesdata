@@ -67,6 +67,7 @@
 				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'delimited',",
+				"     fileSystem: 'rawdata',",
 				"     folderPath: 'final',",
 				"     truncate: true,",
 				"     columnDelimiter: ',',",
