@@ -3,7 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "getdatafromWeb",
+				"description": "gets the data from web and stores in data lake g2.",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -60,11 +61,12 @@
 				]
 			},
 			{
-				"name": "Data flow1",
+				"name": "TransformationOfData",
+				"description": "use custom transformation to the data in gen2",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "getdatafromWeb",
 						"dependencyConditions": [
 							"Succeeded"
 						]
