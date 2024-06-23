@@ -1,0 +1,93 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_gen2_dataLake",
+						"type": "DatasetReference"
+					},
+					"name": "ReadfromDataLake"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LS_final_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "storeInDataLake"
+				}
+			],
+			"transformations": [
+				{
+					"name": "RemoveUnwantedColumns"
+				},
+				{
+					"name": "SelectedRecords"
+				},
+				{
+					"name": "GetPrimaryGenres"
+				},
+				{
+					"name": "PerformCalculateOperation"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          movie as string,",
+				"          title as string,",
+				"          genres as string,",
+				"          year as string,",
+				"          Rating as string,",
+				"          {Rotton Tomato} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ReadfromDataLake",
+				"ReadfromDataLake select(mapColumn(",
+				"          movie,",
+				"          title,",
+				"          genres,",
+				"          year,",
+				"          RottonTomato = {Rotton Tomato}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> RemoveUnwantedColumns",
+				"RemoveUnwantedColumns filter(toInteger(year) > 1950) ~> SelectedRecords",
+				"SelectedRecords derive(primaryGenre = split(genres, '|')[1]) ~> GetPrimaryGenres",
+				"GetPrimaryGenres aggregate(groupBy(year,",
+				"          genres),",
+				"     AverageTomatoScore = avg(toInteger(RottonTomato)),",
+				"          HigestScoreMovie = first(title),",
+				"          LowestScoreTitle = last(title, false()),",
+				"          NumberOfMovies = count(title)) ~> PerformCalculateOperation",
+				"PerformCalculateOperation sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     fileSystem: 'rawdata',",
+				"     folderPath: 'final',",
+				"     truncate: true,",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          year,",
+				"          genres,",
+				"          AverageTomatoScore,",
+				"          HigestScoreMovie,",
+				"          LowestScoreTitle,",
+				"          NumberOfMovies",
+				"     )) ~> storeInDataLake"
+			]
+		}
+	}
+}
